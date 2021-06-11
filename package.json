@@ -1,0 +1,22 @@
+{
+  "name": "tours-with-node",
+  "version": "1.0.0",
+  "description": "An exciting implementation of Node Express and Mongo",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HAZberi/tours-with-node.git"
+  },
+  "author": "Hassaan Zuberi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HAZberi/tours-with-node/issues"
+  },
+  "homepage": "https://github.com/HAZberi/tours-with-node#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
