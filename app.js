@@ -8,6 +8,9 @@ const app = express();
 app.use(express.json());
 
 const tours = JSON.parse(
+  //readfileSync is NOT asynchronous
+  //dont use Sync operations in the callbacks
+  //it blocks the event loop
   fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`)
 );
 
@@ -22,9 +25,29 @@ app.get("/api/v1/tours", (req, res) => {
 });
 
 app.post("/api/v1/tours", (req, res) => {
-    console.log(req.body);
-    res.send("Done")
-})
+  const newTourId = tours[tours.length - 1].id + 1;
+  const newTour = Object.assign({ id: newTourId, ...req.body });
+
+  //wrtieFileSync will block the event loop
+  //dont use it in the callbacks
+
+  tours.push(newTour);
+
+  fs.writeFile(
+    `${__dirname}/dev-data/data/tours-simple.json`,
+    JSON.stringify(tours),
+    (err) => {
+      if (err) return console.log("Cannot write to the file.");
+      console.log("Added a new Tour successfully");
+      res.status(200).json({
+        status: "success",
+        data: {
+          tour: newTour,
+        },
+      });
+    }
+  );
+});
 
 // app.get("/", (req, res) => {
 //   console.log(req);
