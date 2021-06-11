@@ -1,3 +1,4 @@
+const exp = require("constants");
 const express = require("express");
 const fs = require("fs");
 const morgan = require("morgan");
@@ -163,21 +164,28 @@ const deleteAUser = (_, res) => {
   });
 };
 
-app.route("/api/v1/tours").get(getAllTours).post(createATour);
+const tourRouter = express.Router();
+const userRouter = express.Router();
 
-app
-  .route("/api/v1/tours/:id")
+tourRouter.route("/").get(getAllTours).post(createATour);
+
+tourRouter
+  .route("/:id")
   .get(getATour)
   .patch(updateATour)
   .delete(deleteATour);
 
-app.route("/api/v1/users").get(getAllUsers).post(createAUser);
+userRouter.route("/").get(getAllUsers).post(createAUser);
 
-app
-  .route("/api/v1/users/:id")
+userRouter
+  .route("/:id")
   .get(getAUser)
   .patch(updateAUser)
   .delete(deleteAUser);
+
+//router middlewares
+app.use("/api/v1/tours", tourRouter);
+app.use("/api/v1/users", userRouter);
 
 // app.get("/api/v1/tours", getAllTours);
 // app.post("/api/v1/tours", createATour);
