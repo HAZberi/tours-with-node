@@ -1,11 +1,13 @@
 const express = require("express");
 const fs = require("fs");
+const morgan = require("morgan");
 
 const app = express();
 
 //json middleware to handle post requests
 //and get access to req.body as a javaScript object
 app.use(express.json());
+app.use(morgan("dev"));
 
 //middlewares are not automatically hoisted to the top
 //meaning - middlewares take effect depending on where they are
