@@ -8,7 +8,10 @@ const app = express();
 //json middleware to handle post requests
 //and get access to req.body as a javaScript object
 app.use(express.json());
-app.use(morgan("dev"));
+app.use(express.static(`${__dirname}/public`));
+if (process.env.NODE_ENV === "development") {
+  app.use(morgan("dev"));
+}
 
 //middlewares are not automatically hoisted to the top
 //meaning - middlewares take effect depending on where they are
@@ -21,7 +24,6 @@ app.use((req, _, next) => {
   req.requestTime = new Date().toISOString();
   next();
 });
-app.use(express.static(`${__dirname}/public`));
 
 //router middlewares
 app.use("/api/v1/tours", tourRouter);
