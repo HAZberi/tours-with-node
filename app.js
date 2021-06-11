@@ -15,11 +15,11 @@ app.use(morgan("dev"));
 app.use((req, res, next) => {
   console.log("Hello from the middleware");
   next();
-})
+});
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   next();
-})
+});
 
 const tours = JSON.parse(
   //readfileSync is NOT asynchronous
@@ -128,6 +128,41 @@ const deleteATour = (req, res) => {
   });
 };
 
+const getAllUsers = (_, res) => {
+  res.status(500).json({
+    status: "error",
+    message: "Request to this route is not defined",
+  });
+};
+
+const createAUser = (_, res) => {
+  res.status(500).json({
+    status: "error",
+    message: "Request to this route is not defined",
+  });
+};
+
+const getAUser = (_, res) => {
+  res.status(500).json({
+    status: "error",
+    message: "Request to this route is not defined",
+  });
+};
+
+const updateAUser = (_, res) => {
+  res.status(500).json({
+    status: "error",
+    message: "Request to this route is not defined",
+  });
+};
+
+const deleteAUser = (_, res) => {
+  res.status(500).json({
+    status: "error",
+    message: "Request to this route is not defined",
+  });
+};
+
 app.route("/api/v1/tours").get(getAllTours).post(createATour);
 
 app
@@ -135,6 +170,14 @@ app
   .get(getATour)
   .patch(updateATour)
   .delete(deleteATour);
+
+app.route("/api/v1/users").get(getAllUsers).post(createAUser);
+
+app
+  .route("/api/v1/users/:id")
+  .get(getAUser)
+  .patch(updateAUser)
+  .delete(deleteAUser);
 
 // app.get("/api/v1/tours", getAllTours);
 // app.post("/api/v1/tours", createATour);
