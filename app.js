@@ -40,7 +40,7 @@ app.post("/api/v1/tours", (req, res) => {
     (err) => {
       if (err) return console.log("Cannot write to the file.");
       console.log("Added a new Tour successfully");
-      res.status(200).json({
+      res.status(201).json({
         status: "success",
         data: {
           tour: newTour,
