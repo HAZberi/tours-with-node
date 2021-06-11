@@ -14,7 +14,6 @@ app.use(morgan("dev"));
 //meaning - middlewares take effect depending on where they are
 //defined in the code.
 app.use((req, _, next) => {
-
   console.log("Hello from the middleware");
   next();
 });
@@ -22,6 +21,7 @@ app.use((req, _, next) => {
   req.requestTime = new Date().toISOString();
   next();
 });
+app.use(express.static(`${__dirname}/public`));
 
 //router middlewares
 app.use("/api/v1/tours", tourRouter);
