@@ -7,6 +7,18 @@ const app = express();
 //and get access to req.body as a javaScript object
 app.use(express.json());
 
+//middlewares are not automatically hoisted to the top
+//meaning - middlewares take effect depending on where they are
+//defined in the code.
+app.use((req, res, next) => {
+  console.log("Hello from the middleware");
+  next();
+})
+app.use((req, res, next) => {
+  req.requestTime = new Date().toISOString();
+  next();
+})
+
 const tours = JSON.parse(
   //readfileSync is NOT asynchronous
   //dont use Sync operations in the callbacks
@@ -14,9 +26,11 @@ const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`)
 );
 
-const getAllTours = (_, res) => {
+const getAllTours = (req, res) => {
+  console.log(req.requestTime);
   res.status(200).json({
     status: "success",
+    requestedAt: req.requestTime,
     results: tours.length,
     data: {
       tours,
