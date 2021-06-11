@@ -3,6 +3,10 @@ const fs = require("fs");
 
 const app = express();
 
+//json middleware to handle post requests
+//and get access to req.body
+app.use(express.json());
+
 const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`)
 );
@@ -16,6 +20,11 @@ app.get("/api/v1/tours", (req, res) => {
     },
   });
 });
+
+app.post("/api/v1/tours", (req, res) => {
+    console.log(req.body);
+    res.send("Done")
+})
 
 // app.get("/", (req, res) => {
 //   console.log(req);
