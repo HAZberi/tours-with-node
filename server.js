@@ -1,6 +1,8 @@
 // This file contains all the configuration about running the nodeJS
 // server and import appropriate environmental variables
 
+//configure donenv before requiring app module otherwise
+//process.env custom config will not be available in app module.
 const dotenv = require("dotenv");
 dotenv.config({ path: `./config.env` });
 
