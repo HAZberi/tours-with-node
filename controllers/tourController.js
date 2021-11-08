@@ -19,7 +19,7 @@ exports.checkBody = (req, res, next) => {
   if (!req.body.name || !req.body.price) {
     return res.status(400).json({
       status: "failed",
-      message: "Insufficient Data to create a tour",
+      message: "Insufficient Data to create a tour! Missing Name and Price of Tour",
     });
   }
   next();
