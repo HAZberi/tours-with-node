@@ -3,10 +3,11 @@
 
 //configure donenv before requiring app module otherwise
 //process.env custom config will not be available in app module.
-const dotenv = require("dotenv");
+const dotenv = require('dotenv');
+
 dotenv.config({ path: `./config.env` });
 
-const app = require("./app");
+const app = require('./app');
 
 //console.log(process.env);
 
