@@ -1,3 +1,6 @@
+// This file contains all the application configurations and hooks up all the
+// middlewares for request response pipeline.
+
 const express = require("express");
 const morgan = require("morgan");
 const tourRouter = require("./routes/tourRouter");
