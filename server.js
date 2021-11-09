@@ -7,6 +7,10 @@ const dotenv = require('dotenv');
 
 dotenv.config({ path: `./config.env` });
 
+const connectDB = require('./db');
+
+connectDB();
+
 const app = require('./app');
 
 //console.log(process.env);
