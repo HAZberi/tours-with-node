@@ -5,7 +5,7 @@
 //process.env custom config will not be available in app module.
 const dotenv = require('dotenv');
 
-dotenv.config({ path: `./config.env` });
+dotenv.config();
 
 const connectDB = require('./db');
 
