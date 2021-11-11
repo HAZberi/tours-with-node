@@ -56,7 +56,17 @@ const tourSchema = new mongoose.Schema({
 });
 
 const Tour = mongoose.model('Tour', tourSchema);
-console.log(Tour);
+
+const testTour = new Tour({
+  name: 'Bear Country',
+  rating: 4.8,
+  price: 497,
+});
+
+testTour
+  .save()
+  .then((doc) => console.log(doc))
+  .catch((err) => console.log('OMG an Error', err));
 
 //router middlewares
 app.use('/api/v1/tours', tourRouter);
