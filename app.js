@@ -2,7 +2,7 @@
 // middlewares for request response pipeline.
 
 const express = require('express');
-const mongoose = require('mongoose');
+
 const morgan = require('morgan');
 const tourRouter = require('./routes/tourRouter');
 const userRouter = require('./routes/userRouter');
@@ -36,37 +36,6 @@ app.use((req, _, next) => {
   req.requestTime = new Date().toISOString();
   next();
 });
-
-//Mongoose Schema
-
-const tourSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: [true, 'A valid tour name is required'],
-    unique: [true, 'Tour name must be unique'],
-  },
-  rating: {
-    type: Number,
-    defalut: 4.5,
-  },
-  price: {
-    type: Number,
-    required: [true, 'Tour price is required.'],
-  },
-});
-
-const Tour = mongoose.model('Tour', tourSchema);
-
-const testTour = new Tour({
-  name: 'Bear Country',
-  rating: 4.8,
-  price: 497,
-});
-
-testTour
-  .save()
-  .then((doc) => console.log(doc))
-  .catch((err) => console.log('OMG an Error', err));
 
 //router middlewares
 app.use('/api/v1/tours', tourRouter);
