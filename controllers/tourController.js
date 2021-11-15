@@ -6,8 +6,17 @@ exports.getAllTours = async (req, res) => {
     //1. Built a DEEP COPY of query request object
     const queryObj = { ...req.query };
 
+    //2. Exclude special words for data fields
+    const excludeSpecialWords = ['sort', 'limit', 'page', 'fields'];
+    excludeSpecialWords.forEach((el) => delete queryObj[el]);
+
+    //3. Create Query
+    const query = Tour.find(queryObj);
+
+    //Execute Query
+    const tours = await query;
     //Executing a query Method-1
-    const tours = await Tour.find(queryObj);
+    //const tours = await Tour.find(queryObj);
 
     //Executing a query Method-2
     // const tours = await Tour.find()
