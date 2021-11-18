@@ -179,7 +179,7 @@ exports.monthlyPlan = async (req, res) => {
         $sort: { totalTours: -1 },
       },
     ]);
-    console.log(year);
+
     res.status(200).json({
       status: 'success',
       data: plan,

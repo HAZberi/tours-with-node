@@ -5,7 +5,6 @@ class APIFeatures {
   }
 
   filter() {
-    console.log(this.queryString);
     //Build Query
     //1. Built a DEEP COPY of query request object
     const queryObj = { ...this.queryString };
