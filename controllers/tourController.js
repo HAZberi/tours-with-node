@@ -27,7 +27,39 @@ class APIFeatures {
     let queryStr = JSON.stringify(queryObj);
     queryStr = queryStr.replace(/\b(gte|lte|lt|gt)\b/g, (match) => `$${match}`);
 
-    this.query = Tour.find(JSON.parse(queryStr));
+    this.query = this.query.find(JSON.parse(queryStr));
+
+    return this;
+  }
+
+  sort() {
+    if (this.queryString.sort) {
+      const sortBy = this.queryString.sort.split(',').join(' ');
+      this.query = this.query.sort(sortBy);
+    } else {
+      //Implement default query here.
+      // this.query = this.query.sort('createdAt');
+      //"-" use to sort results in descending order
+    }
+    return this;
+  }
+
+  limitFields() {
+    if (this.queryString.fields) {
+      const fields = this.queryString.fields.split(',').join(' ');
+      this.query = this.query.select(fields);
+    } else {
+      this.query = this.query.select('-__v');
+    }
+    return this;
+  }
+
+  paginate() {
+    const page = this.queryString.page * 1 || 1; //setting default value if not specified
+    const limit = this.queryString.limit * 1 || 100; //multiply string Number with 1 to convert type;
+    const skip = (page - 1) * limit;
+
+    this.query = this.query.skip(skip).limit(limit);
 
     return this;
   }
@@ -49,42 +81,46 @@ exports.getAllTours = async (req, res) => {
     // queryStr = queryStr.replace(/\b(gte|lte|lt|gt)\b/g, (match) => `$${match}`);
 
     //4. Create Query
-    let query = Tour.find(JSON.parse(queryStr));
+    // let query = Tour.find(JSON.parse(queryStr));
 
     //5. Sort Data with Anchor field
-    if (req.query.sort) {
-      const sortBy = req.query.sort.split(',').join(' ');
-      console.log(sortBy);
-      query = query.sort(sortBy);
-    } else {
-      //Implement default query here.
-      // query = query.sort('createdAt');
-      //"-" use to sort results in descending order
-    }
+    // if (req.query.sort) {
+    //   const sortBy = req.query.sort.split(',').join(' ');
+    //   console.log(sortBy);
+    //   query = query.sort(sortBy);
+    // } else {
+    //   //Implement default query here.
+    //   // query = query.sort('createdAt');
+    //   //"-" use to sort results in descending order
+    // }
 
     //6. Select specific fields for the response
-    if (req.query.fields) {
-      const fields = req.query.fields.split(',').join(' ');
-      query = query.select(fields);
-    } else {
-      query = query.select('-__v');
-    }
+    // if (req.query.fields) {
+    //   const fields = req.query.fields.split(',').join(' ');
+    //   query = query.select(fields);
+    // } else {
+    //   query = query.select('-__v');
+    // }
 
     //7.Pagination Implementation
-    const page = req.query.page * 1 || 1; //setting default value if not specified
-    const limit = req.query.limit * 1 || 100; //multiply string Number with 1 to convert type;
-    const skip = (page - 1) * limit;
+    // const page = req.query.page * 1 || 1; //setting default value if not specified
+    // const limit = req.query.limit * 1 || 100; //multiply string Number with 1 to convert type;
+    // const skip = (page - 1) * limit;
 
-    query = query.skip(skip).limit(limit);
+    // query = query.skip(skip).limit(limit);
 
-    if (req.query.page) {
-      const numDocs = await Tour.countDocuments();
-      if (skip >= numDocs) throw new Error('This page does not exist.');
-    }
+    // if (req.query.page) {
+    //   const numDocs = await Tour.countDocuments();
+    //   if (skip >= numDocs) throw new Error('This page does not exist.');
+    // }
 
     //Execute Query
 
-    const features = new APIFeatures(Tour.find(), req.query).filter();
+    const features = new APIFeatures(Tour.find(), req.query)
+      .filter()
+      .sort()
+      .limitFields()
+      .paginate();
     const tours = await features.query;
 
     //Executing a query Method-1
