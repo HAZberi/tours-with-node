@@ -5,6 +5,7 @@ const {
   getATour,
   getAllTours,
   topFiveTours,
+  getTourStats,
   updateATour,
   deleteATour,
   createATour,
@@ -13,6 +14,7 @@ const {
 //router.param('id', checkId);
 
 router.route('/top-5-tours').get(topFiveTours, getAllTours);
+router.route('/tour-stats').get(getTourStats);
 
 router.route('/').get(getAllTours).post(createATour);
 
