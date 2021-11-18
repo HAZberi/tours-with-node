@@ -125,6 +125,12 @@ exports.getTourStats = async (_, res) => {
           maxDuration: { $max: '$duration' },
         },
       },
+      {
+        $sort: { minPrice: 1 },
+      },
+      // {
+      //   $match: { _id: { $ne: 'EASY' } },
+      // },
     ]);
     res.status(200).json({
       status: 'success',
