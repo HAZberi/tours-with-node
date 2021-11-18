@@ -15,6 +15,8 @@ const {
 //router.param('id', checkId);
 
 router.route('/top-5-tours').get(topFiveTours, getAllTours);
+
+//Aggregation Pipeline
 router.route('/tour-stats').get(getTourStats);
 router.route('/monthly-plan/:year').get(monthlyPlan);
 
