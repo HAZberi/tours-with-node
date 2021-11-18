@@ -23,7 +23,8 @@ exports.getAllTours = async (req, res) => {
       const sortBy = req.query.sort.split(',').join(' ');
       query = query.sort(sortBy);
     } else {
-      query = query.sort('-createdAt');
+      //Implement default query here.
+      // query = query.sort('createdAt');
     }
 
     //6. Select specific fields for the response
@@ -33,6 +34,13 @@ exports.getAllTours = async (req, res) => {
     } else {
       query = query.select('-__v');
     }
+
+    //7.Pagination Implementation
+    const page = req.query.page * 1 || 1; //setting default value if not specified
+    const limit = req.query.limit * 1 || 100; //multiply string Number with 1 to convert type;
+    const skip = (page - 1) * limit;
+
+    query = query.skip(skip).limit(limit);
 
     //Execute Query
     const tours = await query;
