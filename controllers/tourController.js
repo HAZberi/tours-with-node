@@ -25,6 +25,7 @@ exports.getAllTours = async (req, res) => {
     } else {
       //Implement default query here.
       // query = query.sort('createdAt');
+      //"-" use to sort results in descending order
     }
 
     //6. Select specific fields for the response
