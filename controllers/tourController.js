@@ -7,12 +7,17 @@ exports.topFiveTours = async (req, _, next) => {
   next();
 };
 
-exports.getAllTours = async (req, res) => {
-  try {
-    console.log(req.query);
+class APIFeatures {
+  constructor(query, queryString) {
+    this.query = query;
+    this.queryString = queryString;
+  }
+
+  filter() {
+    console.log(this.queryString);
     //Build Query
     //1. Built a DEEP COPY of query request object
-    const queryObj = { ...req.query };
+    const queryObj = { ...this.queryString };
 
     //2. Filtering Exclude special words for data fields
     const excludeSpecialWords = ['sort', 'limit', 'page', 'fields'];
@@ -21,6 +26,27 @@ exports.getAllTours = async (req, res) => {
     //3. Advanced Filtering
     let queryStr = JSON.stringify(queryObj);
     queryStr = queryStr.replace(/\b(gte|lte|lt|gt)\b/g, (match) => `$${match}`);
+
+    this.query = Tour.find(JSON.parse(queryStr));
+
+    return this;
+  }
+}
+
+exports.getAllTours = async (req, res) => {
+  try {
+    // console.log(req.query);
+    // //Build Query
+    // //1. Built a DEEP COPY of query request object
+    // const queryObj = { ...req.query };
+
+    // //2. Filtering Exclude special words for data fields
+    // const excludeSpecialWords = ['sort', 'limit', 'page', 'fields'];
+    // excludeSpecialWords.forEach((el) => delete queryObj[el]);
+
+    // //3. Advanced Filtering
+    // let queryStr = JSON.stringify(queryObj);
+    // queryStr = queryStr.replace(/\b(gte|lte|lt|gt)\b/g, (match) => `$${match}`);
 
     //4. Create Query
     let query = Tour.find(JSON.parse(queryStr));
@@ -57,7 +83,10 @@ exports.getAllTours = async (req, res) => {
     }
 
     //Execute Query
-    const tours = await query;
+
+    const features = new APIFeatures(Tour.find(), req.query).filter();
+    const tours = await features.query;
+
     //Executing a query Method-1
     //const tours = await Tour.find(queryObj);
 
