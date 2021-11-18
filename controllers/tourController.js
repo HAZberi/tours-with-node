@@ -1,5 +1,12 @@
 const Tour = require('../models/tourModel');
 
+exports.topFiveTours = async (req, _, next) => {
+  req.query.sort = '-ratingsAverage,price';
+  req.query.limit = '5';
+  req.query.fields = 'name,price,duration,difficulty,ratingsAverage,summary';
+  next();
+};
+
 exports.getAllTours = async (req, res) => {
   try {
     console.log(req.query);
@@ -21,6 +28,7 @@ exports.getAllTours = async (req, res) => {
     //5. Sort Data with Anchor field
     if (req.query.sort) {
       const sortBy = req.query.sort.split(',').join(' ');
+      console.log(sortBy);
       query = query.sort(sortBy);
     } else {
       //Implement default query here.
