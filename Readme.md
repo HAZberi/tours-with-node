@@ -12,3 +12,14 @@
 
 - State of the application should always be managed on the client side.
 - Only use API's to handle the resources.
+
+
+Implementation of API features: 
+- Filtering and Advanced filtering like excluding gte, lte, gt and lt words from req.query
+- Sorting data and results.
+- Limit the number of fields for results
+- Dynamic Pagination logic
+- Aggregation pipeline to cater business logic via specific route handlers
+- Virtual properties for Api results.
+
+* Included a script to import data from JSON file and delete records from db.
