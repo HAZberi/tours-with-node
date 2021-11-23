@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const slugify = require('slugify');
 //Mongoose Schema
 
 const tourSchema = new mongoose.Schema(
@@ -9,6 +9,9 @@ const tourSchema = new mongoose.Schema(
       required: [true, 'A valid tour name is required'],
       unique: [true, 'Tour name must be unique'],
       trim: true,
+    },
+    slug: {
+      type: String,
     },
     duration: {
       type: Number,
@@ -66,6 +69,26 @@ const tourSchema = new mongoose.Schema(
 
 tourSchema.virtual('durationInWeeks').get(function () {
   return this.duration / 7;
+});
+
+//Document Middleware for mongoDB
+
+//Triggers before save() and create() but NOT after insertMany();
+tourSchema.pre('save', function (next) {
+  this.slug = slugify(this.name, { lower: true });
+  next();
+});
+
+tourSchema.pre('save', (next) => {
+  console.log('Saving the requested document to DB........');
+  next();
+});
+
+//Triggers after save() and create() but NOT after insertMany();
+tourSchema.post('save', (doc, next) => {
+  console.log('The following document is successfully saved to the Database.');
+  console.log(doc);
+  next();
 });
 
 const Tour = mongoose.model('Tour', tourSchema);
