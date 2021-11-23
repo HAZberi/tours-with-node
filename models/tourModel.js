@@ -103,6 +103,16 @@ tourSchema.pre(/^find/, function (next) {
   /*using regular exp to impact any query that starts with find*/ this.find({
     secretTour: { $ne: true },
   });
+
+  this.start = Date.now();
+  next();
+});
+
+//Triggers after a query is executed and returned respective results.
+//**Remember arrow function in callbacks change the reference to this keyword**
+tourSchema.post(/^find/, function (docs, next) {
+  console.log(`Query took ${Date.now() - this.start} milliseconds`);
+  // console.log(docs);
   next();
 });
 
