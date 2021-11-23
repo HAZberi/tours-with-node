@@ -60,6 +60,10 @@ const tourSchema = new mongoose.Schema(
       select: false,
     },
     startDates: [Date],
+    secretTour: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     toJSON: { virtuals: true },
@@ -90,6 +94,17 @@ tourSchema.pre('save', function (next) {
 //   console.log(doc);
 //   next();
 // });
+
+//Query Middleware for mongoDB
+
+//Triggers before a query gets executed depends on the reqular expression or the specific keyword hook
+// tourSchema.pre('find', function (next) { =========> using 'find' will only impact document.find query
+tourSchema.pre(/^find/, function (next) {
+  /*using regular exp to impact any query that starts with find*/ this.find({
+    secretTour: { $ne: true },
+  });
+  next();
+});
 
 const Tour = mongoose.model('Tour', tourSchema);
 
