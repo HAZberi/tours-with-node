@@ -79,17 +79,17 @@ tourSchema.pre('save', function (next) {
   next();
 });
 
-tourSchema.pre('save', (next) => {
-  console.log('Saving the requested document to DB........');
-  next();
-});
+// tourSchema.pre('save', (next) => {
+//   console.log('Saving the requested document to DB........');
+//   next();
+// });
 
-//Triggers after save() and create() but NOT after insertMany();
-tourSchema.post('save', (doc, next) => {
-  console.log('The following document is successfully saved to the Database.');
-  console.log(doc);
-  next();
-});
+// //Triggers after save() and create() but NOT after insertMany();
+// tourSchema.post('save', (doc, next) => {
+//   console.log('The following document is successfully saved to the Database.');
+//   console.log(doc);
+//   next();
+// });
 
 const Tour = mongoose.model('Tour', tourSchema);
 
