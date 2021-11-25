@@ -10,7 +10,7 @@ const userRouter = require('./routes/userRouter');
 const app = express();
 //middlewares are not automatically hoisted to the top
 //meaning - middlewares take effect depending on where they are
-//defined in the code.
+//defined in the code. "Order Matters"
 
 //json middleware to handle post requests
 //and get access to req.body as a javaScript object
@@ -38,8 +38,19 @@ app.use((req, _, next) => {
 });
 
 //router middlewares
+//middlewares are not automatically hoisted to the top
+//meaning - middlewares take effect depending on where they are
+//defined in the code. "Order Matters"
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
+
+//if user hits an undefined route
+app.all('*', (req, res) => {
+  res.status(404).json({
+    status: 'failed',
+    message: `CANNOT find ${req.originalUrl} on this server.`,
+  });
+});
 
 module.exports = app;
 
