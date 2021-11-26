@@ -45,11 +45,17 @@ app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 
 //if user hits an undefined route
-app.all('*', (req, res) => {
-  res.status(404).json({
-    status: 'failed',
-    message: `CANNOT find ${req.originalUrl} on this server.`,
-  });
+app.all('*', (req, res, next) => {
+  // res.status(404).json({
+  //   status: 'failed',
+  //   message: `CANNOT find ${req.originalUrl} on this server.`,
+  // });
+  const err = new Error(`CANNOT find ${req.originalUrl} on this server.`);
+  err.status = 'failed';
+  err.statusCode = 404;
+  //if we pass an argument to the next(), it will short circuit the
+  //request-response cycle and treat it as an error automatically
+  next(err);
 });
 
 //Global Error Handling Middleware
