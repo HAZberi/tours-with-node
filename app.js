@@ -4,8 +4,10 @@
 const express = require('express');
 
 const morgan = require('morgan');
+const AppError = require('./utils/appError');
 const tourRouter = require('./routes/tourRouter');
 const userRouter = require('./routes/userRouter');
+const globalErrorHandler = require('./controllers/errorController');
 
 const app = express();
 //middlewares are not automatically hoisted to the top
@@ -46,30 +48,13 @@ app.use('/api/v1/users', userRouter);
 
 //if user hits an undefined route
 app.all('*', (req, res, next) => {
-  // res.status(404).json({
-  //   status: 'failed',
-  //   message: `CANNOT find ${req.originalUrl} on this server.`,
-  // });
-  const err = new Error(`CANNOT find ${req.originalUrl} on this server.`);
-  err.status = 'failed';
-  err.statusCode = 404;
   //if we pass an argument to the next(), it will short circuit the
   //request-response cycle and treat it as an error automatically
-  next(err);
+  next(new AppError(`CANNOT find ${req.originalUrl} on this server.`, 404));
 });
 
 //Global Error Handling Middleware
 
-app.use((err, req, res, next) => {
-  err.statusCode = err.statusCode || 500;
-  err.status = err.status || 'Error';
-
-  res.status(err.statusCode).json({
-    status: err.status,
-    message: err.message,
-  });
-});
+app.use(globalErrorHandler);
 
 module.exports = app;
-
-//TEST Debugging
