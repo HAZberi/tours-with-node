@@ -41,6 +41,8 @@ exports.getATour = catchAsync(async (req, res, next) => {
   const { id } = req.params;
   const tour = await Tour.findById(id);
 
+  //To handle undefined mongoDB ID
+  //Example: 619281f6d87eab1c837dba77 will return null but 619281f6d87eab1c837dbb77 will return a tour
   if (!tour) return next(new AppError(`No tour found with ID:${id}`, 404));
 
   res.status(200).json({
