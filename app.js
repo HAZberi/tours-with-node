@@ -54,7 +54,8 @@ app.all('*', (req, res, next) => {
 });
 
 //Global Error Handling Middleware
-
+//we can use next(err) in our controllers to direct all the errors to globalErrorHandler
+//this is an advanced use case
 app.use(globalErrorHandler);
 
 module.exports = app;
