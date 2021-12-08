@@ -12,6 +12,15 @@ const handleDuplicateKeyDB = (err) => {
   return new AppError(message, 400);
 };
 
+const handleValidationErrors = (err) => {
+  //This function handles validation errors when creating or updating documents.
+
+  const errors = Object.values(err.errors).map((el) => el.message);
+
+  const message = `Invalid input data. ${errors.join(' ')}`;
+  return new AppError(message, 400);
+};
+
 const sendErrorDev = (err, res) => {
   res.status(err.statusCode).json({
     status: err.status,
@@ -59,6 +68,8 @@ module.exports = (err, req, res, next) => {
     if (error.name === 'CastError') error = handleCastErrorDB(error);
 
     if (error.code === 11000) error = handleDuplicateKeyDB(error);
+
+    if (error.name === 'ValidationError') error = handleValidationErrors(error);
 
     sendErrorProd(error, res);
   }
