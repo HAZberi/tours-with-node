@@ -1,7 +1,14 @@
 const AppError = require('../utils/appError');
 
 const handleCastErrorDB = (err) => {
+  //This function handles invalid IDs
   const message = `Invalid ${err.path}: ${err.value}`;
+  return new AppError(message, 400);
+};
+
+const handleDuplicateKeyDB = (err) => {
+  //This function handles duplicate key when creating new documents.
+  const message = `Duplicate field value [${err.keyValue.name}]. Please use something else!`;
   return new AppError(message, 400);
 };
 
@@ -48,9 +55,11 @@ module.exports = (err, req, res, next) => {
     //2. create a deep copy of err object
     let error = { ...err };
     //3. add destructured name from step 1 to newly created error object
-    error.name = name;
+    if (name) error.name = name;
 
     if (error.name === 'CastError') error = handleCastErrorDB(error);
+
+    if (error.code === 11000) error = handleDuplicateKeyDB(error);
 
     sendErrorProd(error, res);
   }
