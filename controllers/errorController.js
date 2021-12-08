@@ -51,7 +51,6 @@ module.exports = (err, req, res, next) => {
     //FIX for unexpected Error Object behavior
     //1. destructure the name of the Error directly from err object !!very important!!
     const { name } = err;
-    //console.log(name);
     //2. create a deep copy of err object
     let error = { ...err };
     //3. add destructured name from step 1 to newly created error object
