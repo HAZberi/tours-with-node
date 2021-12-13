@@ -3,16 +3,14 @@ const mongoose = require('mongoose');
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, 'Username is required.'],
-    unique: [true, 'Tour name must be unique.'],
+    required: [true, 'Please tell us your name.'],
     trim: true,
-    maxlength: [40, 'Tour name cannot exceed 40 characters.'],
-    minlength: [8, 'Tour name must have atleast 8 characters.'],
   },
 
   email: {
     type: String,
     required: [true, 'Email address is required.'],
+    unique: [true, 'Email address must be unique.'],
   },
 
   photo: {
@@ -21,13 +19,17 @@ const userSchema = new mongoose.Schema({
 
   password: {
     type: String,
+    required: [true, 'Please enter an 8 character password'],
+    minlength: [8, 'Minimum password length is 8 characters.'],
   },
 
   confirmPassword: {
     type: String,
+    required: [true, 'Please confirm your password.'],
+    minlength: 8,
   },
 });
 
-const User = mongoose.model('user', userSchema);
+const User = mongoose.model('User', userSchema);
 
 module.exports = User;
