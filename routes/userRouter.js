@@ -9,6 +9,11 @@ const {
   deleteAUser,
 } = require('../controllers/userController');
 
+const { signUp } = require('../controllers/authController');
+
+//A separate route for signing up new user - does not follow REST protocol.
+router.route('/signup').post(signUp);
+
 router.route('/').get(getAllUsers).post(createAUser);
 
 router.route('/:id').get(getAUser).patch(updateAUser).delete(deleteAUser);
