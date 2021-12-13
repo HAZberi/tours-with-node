@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const validator = require('validator');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -11,6 +12,8 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Email address is required.'],
     unique: [true, 'Email address must be unique.'],
+    validate: [validator.isEmail, 'Please enter a valid email address.'],
+    lowercase: true,
   },
 
   photo: {
@@ -19,7 +22,7 @@ const userSchema = new mongoose.Schema({
 
   password: {
     type: String,
-    required: [true, 'Please enter an 8 character password'],
+    required: [true, 'Please enter an eight character password'],
     minlength: [8, 'Minimum password length is 8 characters.'],
   },
 
