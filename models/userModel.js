@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -42,9 +43,13 @@ const userSchema = new mongoose.Schema({
 
 //It is important to encrypt passwords before saving to the database, this can be done via mongoose pre middleware
 
-userSchema.pre('save', function (next) {
+userSchema.pre('save', async function (next) {
   //The pre save hook should only run if the password is modified. Gaurd clause as follows.
   if (!this.isModified('password')) return next();
+
+  this.password = await bcrypt.hash(this.password, 12);
+
+  this.confirmPassword = undefined;
 });
 
 const User = mongoose.model('User', userSchema);
