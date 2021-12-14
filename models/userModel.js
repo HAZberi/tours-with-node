@@ -29,6 +29,14 @@ const userSchema = new mongoose.Schema({
   confirmPassword: {
     type: String,
     required: [true, 'Please confirm your password.'],
+    //Validator method only works for .create and .save methods. !important.
+    validate: {
+      //We cannot use the arrow function here because we need to use the 'this' reference keyword.
+      validator: function (el) {
+        return el === this.password;
+      },
+      message: 'Passwords are not the same.',
+    },
   },
 });
 
