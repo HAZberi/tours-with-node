@@ -40,6 +40,13 @@ const userSchema = new mongoose.Schema({
   },
 });
 
+//It is important to encrypt passwords before saving to the database, this can be done via mongoose pre middleware
+
+userSchema.pre('save', function (next) {
+  //The pre save hook should only run if the password is modified. Gaurd clause as follows.
+  if (!this.isModified('password')) return next();
+});
+
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;
