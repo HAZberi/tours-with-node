@@ -66,3 +66,10 @@ exports.logIn = catchAsync(async (req, res, next) => {
     token,
   });
 });
+
+exports.protect = catchAsync(async (req, res, next) => {
+  //1. Getting the token and check if its there.
+
+  //protect is a middleware function so if all conditions are statisfied we just call next
+  next();
+});

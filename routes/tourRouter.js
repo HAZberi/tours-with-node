@@ -12,6 +12,8 @@ const {
   monthlyPlan,
 } = require('../controllers/tourController');
 
+const { protect } = require('../controllers/authController');
+
 //router.param('id', checkId);
 
 router.route('/top-5-tours').get(topFiveTours, getAllTours);
@@ -20,7 +22,7 @@ router.route('/top-5-tours').get(topFiveTours, getAllTours);
 router.route('/tour-stats').get(getTourStats);
 router.route('/monthly-plan/:year').get(monthlyPlan);
 
-router.route('/').get(getAllTours).post(createATour);
+router.route('/').get(protect, getAllTours).post(createATour);
 
 router.route('/:id').get(getATour).patch(updateATour).delete(deleteATour);
 
