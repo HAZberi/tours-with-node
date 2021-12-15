@@ -9,10 +9,13 @@ const {
   deleteAUser,
 } = require('../controllers/userController');
 
-const { signUp } = require('../controllers/authController');
+const { signUp, logIn } = require('../controllers/authController');
 
 //A separate route for signing up new user - does not follow REST protocol.
 router.route('/signup').post(signUp);
+
+//A separate route for logging in user - does not follow REST protocol.
+router.route('/login').post(logIn);
 
 router.route('/').get(getAllUsers).post(createAUser);
 

@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
+const AppError = require('../utils/appError');
 
 exports.signUp = catchAsync(async (req, res, next) => {
   //The following code creates a user based on req.body but any user can also create admin user by this technique.
@@ -31,5 +32,27 @@ exports.signUp = catchAsync(async (req, res, next) => {
     data: {
       user: newUser,
     },
+  });
+});
+
+exports.logIn = catchAsync(async (req, res, next) => {
+  const { email, password } = req.body;
+
+  //1. Check if the email and password is provided by the client.
+  if (!email || !password) {
+    return next(
+      new AppError('Please provide both email and password to log in.', 400)
+    );
+  }
+
+  //2. Check if user exists and password is correct
+  const user = await User.findOne({ email }).select('+password');
+  console.log(user);
+
+  //3. If everything is ok send the token to the client
+  const token = '';
+  res.status(200).json({
+    status: 'success',
+    token,
   });
 });
