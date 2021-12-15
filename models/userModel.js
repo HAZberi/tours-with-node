@@ -53,6 +53,15 @@ userSchema.pre('save', async function (next) {
   this.confirmPassword = undefined;
 });
 
+//Instance Methods can be created on schema so they can called over in controller and provide us an opportunity to keep all data related operation in models.
+userSchema.methods.correctPassword = async function (
+  candidatePassword,
+  encryptedUserPassword
+) {
+  //This function will compare entered password with encrypted password and return a boolean
+  return await bcrypt.compare(candidatePassword, encryptedUserPassword);
+};
+
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;
