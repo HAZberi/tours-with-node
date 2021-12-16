@@ -69,7 +69,21 @@ exports.logIn = catchAsync(async (req, res, next) => {
 
 exports.protect = catchAsync(async (req, res, next) => {
   //1. Getting the token and check if its there.
+  const { authorization } = req.headers;
 
+  let token = '';
+
+  if (authorization && authorization.startsWith('Bearer')) {
+    token = authorization.split(' ')[1];
+  }
+
+  console.log(token);
+
+  if (!token) {
+    return next(
+      new AppError('You are not logged in. Please log in to get access.', 401)
+    );
+  }
   //protect is a middleware function so if all conditions are statisfied we just call next
   next();
 });
