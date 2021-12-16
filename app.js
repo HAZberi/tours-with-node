@@ -30,6 +30,7 @@ if (process.env.NODE_ENV === 'development') {
 //A naive example of middleware.
 app.use((req, _, next) => {
   console.log('Hello from the middleware');
+  //console.log(req.headers);
   next();
 });
 
