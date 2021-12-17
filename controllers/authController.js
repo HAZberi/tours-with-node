@@ -89,6 +89,15 @@ exports.protect = catchAsync(async (req, res, next) => {
   const decoded = await jwt.verify(token, process.env.JWT_SECRET);
   console.log(decoded);
 
+  //3. For advanced security check if the user still exists
+  const freshUser = await User.findById(decoded.id);
+
+  console.log(freshUser);
+  if (!freshUser)
+    return next(
+      new AppError('The user belongs to this token no longer exists.', 401)
+    );
+
   //protect is a middleware function so if all conditions are statisfied we just call next
   next();
 });
