@@ -28,6 +28,11 @@ const userSchema = new mongoose.Schema({
     select: false,
   },
 
+  changedPasswordAt: {
+    type: Date,
+    required: true,
+  },
+
   confirmPassword: {
     type: String,
     required: [true, 'Please confirm your password.'],
@@ -60,6 +65,17 @@ userSchema.methods.correctPassword = async function (
 ) {
   //This function will compare entered password with encrypted password and return a boolean
   return await bcrypt.compare(candidatePassword, encryptedUserPassword);
+};
+
+//Instance Method to check if the password is changed after the JWT token is issued.
+userSchema.methods.changedPassword = function (JWTTimestamp) {
+  if (this.changedPasswordAt) {
+    const passwordChangeTimestamp = this.changedPasswordAt.getTime() / 1000;
+    return passwordChangeTimestamp > JWTTimestamp; //returns true if password is changed after token issue.
+  }
+
+  //False means changedPasswordAt doesnot exist
+  return false;
 };
 
 const User = mongoose.model('User', userSchema);

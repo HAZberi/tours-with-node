@@ -19,7 +19,8 @@ exports.signUp = catchAsync(async (req, res, next) => {
   //const newUser = await User.create(req.body);
 
   //Avoid a potential breach by creating user in a more specific way as follows, so no one can assign roles in req.body
-  const { name, email, photo, password, confirmPassword } = req.body;
+  const { name, email, photo, password, confirmPassword, changedPasswordAt } =
+    req.body;
 
   const newUser = await User.create({
     name,
@@ -27,6 +28,7 @@ exports.signUp = catchAsync(async (req, res, next) => {
     photo,
     password,
     confirmPassword,
+    changedPasswordAt,
   });
 
   //Generate a jwt token for the client as follows
@@ -77,8 +79,6 @@ exports.protect = catchAsync(async (req, res, next) => {
     token = authorization.split(' ')[1];
   }
 
-  console.log(token);
-
   if (!token) {
     return next(
       new AppError('You are not logged in. Please log in to get access.', 401)
@@ -87,16 +87,24 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   //2. Verify the token and promisfy the result.
   const decoded = await jwt.verify(token, process.env.JWT_SECRET);
-  console.log(decoded);
 
   //3. For advanced security check if the user still exists
-  const freshUser = await User.findById(decoded.id);
+  const currentUser = await User.findById(decoded.id);
 
-  console.log(freshUser);
-  if (!freshUser)
+  if (!currentUser)
     return next(
       new AppError('The user belongs to this token no longer exists.', 401)
     );
+
+  //4. Check if user changed the password after the token is issued.
+  if (currentUser.changedPassword(decoded.iat)) {
+    return next(
+      new AppError(
+        'You have changed the password recently. Please log in again.',
+        401
+      )
+    );
+  }
 
   //protect is a middleware function so if all conditions are statisfied we just call next
   next();
