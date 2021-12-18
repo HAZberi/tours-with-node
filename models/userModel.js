@@ -30,7 +30,6 @@ const userSchema = new mongoose.Schema({
 
   changedPasswordAt: {
     type: Date,
-    required: true,
   },
 
   confirmPassword: {
