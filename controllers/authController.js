@@ -114,7 +114,9 @@ exports.protect = catchAsync(async (req, res, next) => {
     );
   }
 
-  //protect is a middleware function so if all conditions are statisfied we just call next
+  //protect is a middleware function so if all conditions are statisfied we set the current user and call next
+  //Granted access to current user to browse protected routes.
+  req.user = currentUser;
   next();
 });
 
