@@ -19,8 +19,15 @@ exports.signUp = catchAsync(async (req, res, next) => {
   //const newUser = await User.create(req.body);
 
   //Avoid a potential breach by creating user in a more specific way as follows, so no one can assign roles in req.body
-  const { name, email, photo, password, confirmPassword, changedPasswordAt } =
-    req.body;
+  const {
+    name,
+    email,
+    photo,
+    password,
+    confirmPassword,
+    changedPasswordAt,
+    role,
+  } = req.body;
 
   const newUser = await User.create({
     name,
@@ -29,6 +36,7 @@ exports.signUp = catchAsync(async (req, res, next) => {
     password,
     confirmPassword,
     changedPasswordAt,
+    role,
   });
 
   //Generate a jwt token for the client as follows
@@ -109,3 +117,9 @@ exports.protect = catchAsync(async (req, res, next) => {
   //protect is a middleware function so if all conditions are statisfied we just call next
   next();
 });
+
+exports.restrictTo =
+  (...roles) =>
+  (req, res, next) => {
+    console.log(roles);
+  };

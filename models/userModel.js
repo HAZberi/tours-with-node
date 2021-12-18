@@ -44,6 +44,14 @@ const userSchema = new mongoose.Schema({
       message: 'Passwords are not the same.',
     },
   },
+
+  role: {
+    type: String,
+    enum: {
+      values: ['admin', 'user', 'guide', 'lead-guide'],
+    },
+    default: 'user',
+  },
 });
 
 //It is important to encrypt passwords before saving to the database, this can be done via mongoose pre middleware

@@ -12,7 +12,7 @@ const {
   monthlyPlan,
 } = require('../controllers/tourController');
 
-const { protect } = require('../controllers/authController');
+const { protect, restrictTo } = require('../controllers/authController');
 
 //router.param('id', checkId);
 
@@ -24,6 +24,10 @@ router.route('/monthly-plan/:year').get(monthlyPlan);
 
 router.route('/').get(protect, getAllTours).post(createATour);
 
-router.route('/:id').get(getATour).patch(updateATour).delete(deleteATour);
+router
+  .route('/:id')
+  .get(getATour)
+  .patch(updateATour)
+  .delete(protect, restrictTo('admin', 'lead-guide'), deleteATour);
 
 module.exports = router;
