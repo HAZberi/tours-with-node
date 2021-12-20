@@ -13,6 +13,24 @@ const signToken = (id) => {
   return token;
 };
 
+//Refactor create and send token in response
+const createSendToken = (user, statusCode, res) => {
+  //Generate a jwt token for the client as follows
+  const token = signToken(user._id);
+
+  //to send the password in the json body do the following
+  user.password = undefined;
+  //the above will work because we are not saving this property update.
+
+  res.status(statusCode).json({
+    status: 'success',
+    token,
+    data: {
+      user,
+    },
+  });
+};
+
 exports.signUp = catchAsync(async (req, res, next) => {
   //The following code creates a user based on req.body but any user can also create admin user by this technique.
   //https://www.mongodb.com/features/mongodb-authentication
@@ -42,15 +60,7 @@ exports.signUp = catchAsync(async (req, res, next) => {
   });
 
   //Generate a jwt token for the client as follows
-  const token = signToken(newUser._id);
-
-  res.status(201).json({
-    status: 'success',
-    token,
-    data: {
-      user: newUser,
-    },
-  });
+  createSendToken(newUser, 201, res);
 });
 
 exports.logIn = catchAsync(async (req, res, next) => {
@@ -72,11 +82,7 @@ exports.logIn = catchAsync(async (req, res, next) => {
   }
 
   //3. If everything is ok sign the token and send the token to the client
-  const token = signToken(user._id);
-  res.status(200).json({
-    status: 'success',
-    token,
-  });
+  createSendToken(user, 200, res);
 });
 
 exports.protect = catchAsync(async (req, res, next) => {
@@ -218,11 +224,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   //Created mongoose middleware to update the changedPasswordAt => see userModel.js
 
   //4) Log the user in and send the JWT token
-  const token = signToken(user._id);
-  res.status(200).json({
-    status: 'success',
-    token,
-  });
+  createSendToken(req.user, 200, res);
 });
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
@@ -243,9 +245,5 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   await user.save();
 
   //4) Log in the user and send the JwT token
-  const token = signToken(user._id);
-  res.status(200).json({
-    status: 'success',
-    token,
-  });
+  createSendToken(req.user, 200, res);
 });
