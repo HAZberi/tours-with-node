@@ -1,5 +1,7 @@
+const User = require('../models/userModel');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
+const filterObject = require('../utils/filterReqBody');
 
 exports.getAllUsers = (_, res) => {
   res.status(500).json({
@@ -17,6 +19,20 @@ exports.updateMe = catchAsync(async (req, res, next) => {
         400
       )
     );
+
+  //2 Filter out unwanted field name that are not allowed.
+  const filteredBody = filterObject(req.body, 'name', 'email', 'photo');
+  //3) Update the document data only where the fields are changed.
+  const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
+    //new option will return the updated object
+    runValidators: true,
+    new: true,
+  });
+
+  res.status(200).json({
+    status: 'success',
+    user: updatedUser,
+  });
 });
 
 exports.createAUser = (_, res) => {
