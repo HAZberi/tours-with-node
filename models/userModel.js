@@ -60,6 +60,11 @@ const userSchema = new mongoose.Schema({
   passwordResetTokenExpiresAt: {
     type: Date,
   },
+  active: {
+    type: Boolean,
+    default: true,
+    select: false,
+  },
 });
 
 //It is important to encrypt passwords before saving to the database, this can be done via mongoose pre middleware
@@ -81,6 +86,13 @@ userSchema.pre('save', function (next) {
 
   //Added a second just to make sure token is issued before the changing this property.
   this.changedPasswordAt = Date.now() - 1000;
+  next();
+});
+
+//Only include those user who are acitve
+userSchema.pre(/^find/, function (next) {
+  this.find({ active: { $ne: false } });
+
   next();
 });
 
