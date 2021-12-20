@@ -7,6 +7,7 @@ const {
   createAUser,
   updateAUser,
   deleteAUser,
+  updateMe,
 } = require('../controllers/userController');
 
 const {
@@ -32,6 +33,8 @@ router.route('/reset-password/:token').patch(resetPassword);
 
 //A separate route for resetting password - does not follow REST protocol.
 router.route('/update-password').patch(protect, updatePassword);
+
+router.route('/update-me').patch(protect, updateMe);
 
 router.route('/').get(getAllUsers).post(createAUser);
 
