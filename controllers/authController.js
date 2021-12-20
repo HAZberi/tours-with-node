@@ -224,3 +224,28 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     token,
   });
 });
+
+exports.updatePassword = catchAsync(async (req, res, next) => {
+  //1) Get the user from the collection
+  const user = await User.findById(req.user.id).select('+password');
+
+  //2) Check If the user exists and password is correct
+  if (
+    !user &&
+    !(await user.correctPassword(req.body.currentPassword, req.user.password))
+  )
+    return next(new AppError('Invalid current password entered.', 401));
+
+  //3 Update the password and save the document
+  user.password = req.body.newPassword;
+  user.confirmPassword = req.body.confirmNewPassword;
+  //Now we want to validate the document on save since we modified password and confirmPassword
+  await user.save();
+
+  //4) Log in the user and send the JwT token
+  const token = signToken(user._id);
+  res.status(200).json({
+    status: 'success',
+    token,
+  });
+});

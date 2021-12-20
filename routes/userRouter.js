@@ -12,8 +12,10 @@ const {
 const {
   signUp,
   logIn,
+  protect,
   forgotPassword,
   resetPassword,
+  updatePassword,
 } = require('../controllers/authController');
 
 //A separate route for signing up new user - does not follow REST protocol.
@@ -27,6 +29,9 @@ router.route('/forgot-password').post(forgotPassword);
 
 //A separate route for resetting password - does not follow REST protocol.
 router.route('/reset-password/:token').patch(resetPassword);
+
+//A separate route for resetting password - does not follow REST protocol.
+router.route('/update-password').patch(protect, updatePassword);
 
 router.route('/').get(getAllUsers).post(createAUser);
 
