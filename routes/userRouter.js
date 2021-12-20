@@ -26,7 +26,7 @@ router.route('/login').post(logIn);
 router.route('/forgot-password').post(forgotPassword);
 
 //A separate route for resetting password - does not follow REST protocol.
-router.route('/reset-password').post(resetPassword);
+router.route('/reset-password/:token').patch(resetPassword);
 
 router.route('/').get(getAllUsers).post(createAUser);
 
