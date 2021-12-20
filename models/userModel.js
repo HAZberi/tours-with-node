@@ -70,7 +70,18 @@ userSchema.pre('save', async function (next) {
 
   this.password = await bcrypt.hash(this.password, 12);
 
+  //Delete confirmPassword field
   this.confirmPassword = undefined;
+  next();
+});
+
+userSchema.pre('save', function (next) {
+  //The pre save hook should only run if the password is modified and the document is not new. Gaurd clause as follows.
+  if (!this.isModified('password') || this.isNew) return next();
+
+  //Added a second just to make sure token is issued before the changing this property.
+  this.changedPasswordAt = Date.now() - 1000;
+  next();
 });
 
 //Instance Methods can be created on schema so they can called over in controller and provide us an opportunity to keep all data related operation in models.

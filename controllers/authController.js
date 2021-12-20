@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
@@ -190,8 +191,36 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   }
 });
 exports.resetPassword = catchAsync(async (req, res, next) => {
+  const { password, confirmPassword } = req.body;
+
   //1) Get user based on the token
+  const hashedToken = crypto
+    .createHash('sha256')
+    .update(req.params.token)
+    .digest('hex');
+
+  const user = await User.findOne({
+    passwordResetToken: hashedToken,
+    //checking the token expiry while finding the document - will not return anything if condition is not satisfied.
+    passwordResetTokenExpiresAt: { $gt: Date.now() },
+  });
   //2) Check if the user exists and token is not expired, set the new password
+  if (!user) return next(new AppError('Token is invalid or expired', 400));
+
+  user.password = password;
+  user.confirmPassword = confirmPassword;
+  user.passwordResetToken = undefined;
+  user.passwordResetTokenExpiresAt = undefined;
+  //Now we want to validate the document on save since we modified password and confirmPassword
+  await user.save();
+
   //3) Update the changedPasswordAt property for the user
-  //4) Log the user and send the JWT token
+  //Created mongoose middleware to update the changedPasswordAt => see userModel.js
+
+  //4) Log the user in and send the JWT token
+  const token = signToken(user._id);
+  res.status(200).json({
+    status: 'success',
+    token,
+  });
 });
