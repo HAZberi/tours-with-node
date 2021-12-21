@@ -7,6 +7,7 @@ const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
+const hpp = require('hpp');
 
 const AppError = require('./utils/appError');
 const tourRouter = require('./routes/tourRouter');
@@ -50,6 +51,20 @@ const limiter = rateLimit({
 });
 //Use Express limiter function as middleware on all routes with /api
 app.use('/api', limiter);
+
+//Prevent parameter pollution in query strings !Not important but can be used for additional security in some cases.
+app.use(
+  hpp({
+    whitelist: [
+      'duration',
+      'maxGroupSize',
+      'difficulty',
+      'ratingsAverage',
+      'ratingsQuantity',
+      'price',
+    ],
+  })
+);
 
 //A naive example of middleware.
 app.use((req, _, next) => {
