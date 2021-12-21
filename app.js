@@ -4,6 +4,7 @@
 const express = require('express');
 
 const morgan = require('morgan');
+const rateLimit = require('express-rate-limit');
 const AppError = require('./utils/appError');
 const tourRouter = require('./routes/tourRouter');
 const userRouter = require('./routes/userRouter');
@@ -26,6 +27,16 @@ app.use(express.static(`${__dirname}/public`));
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
+
+//Express Rate Limiter middleware creation
+const limiter = rateLimit({
+  max: 100,
+  //Time window for max requests, in milliseconds
+  windowMs: 60 * 60 * 1000,
+  message: 'Too many requests from this IP. Please try again in one hour.',
+});
+//Use Express limiter function as middleware on all routes with /api
+app.use('/api', limiter);
 
 //A naive example of middleware.
 app.use((req, _, next) => {
