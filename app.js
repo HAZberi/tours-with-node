@@ -21,6 +21,7 @@ app.use(helmet());
 
 //json middleware to handle post requests
 //and get access to req.body as a javaScript object
+//Body-parser
 app.use(express.json());
 
 //use express.static as middleware to serve static files
