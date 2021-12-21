@@ -2,10 +2,12 @@
 // middlewares for request response pipeline.
 
 const express = require('express');
-
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
+const mongoSanitize = require('express-mongo-sanitize');
+const xss = require('xss-clean');
+
 const AppError = require('./utils/appError');
 const tourRouter = require('./routes/tourRouter');
 const userRouter = require('./routes/userRouter');
@@ -23,6 +25,12 @@ app.use(helmet());
 //and get access to req.body as a javaScript object
 //Body-parser
 app.use(express.json());
+
+//Data Sanitization middleware to prevent NOSQL query injections
+app.use(mongoSanitize());
+
+//Data Sanitization middleware to prevent HTML/XML injection
+app.use(xss());
 
 //use express.static as middleware to serve static files
 app.use(express.static(`${__dirname}/public`));
