@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
-const User = require('./userModel');
+// const User = require('./userModel');
 //Mongoose Schema
 
 const tourSchema = new mongoose.Schema(
@@ -121,9 +121,7 @@ const tourSchema = new mongoose.Schema(
         },
       },
     ],
-    guides: {
-      type: Array,
-    },
+    guides: [{ type: mongoose.Schema.ObjectId, ref: 'User' }],
   },
   {
     toJSON: { virtuals: true },
@@ -144,14 +142,14 @@ tourSchema.pre('save', function (next) {
 });
 
 //Embedding User documentes in Tour Model Schema -- Check lecture 150 NodeJS for details
-tourSchema.pre('save', async function (next) {
-  const arrayOfPromises = this.guides.map(
-    async (id) => await User.findById(id)
-  );
-  //Directly assign the array to guides property.
-  this.guides = await Promise.all(arrayOfPromises);
-  next();
-});
+// tourSchema.pre('save', async function (next) {
+//   const arrayOfPromises = this.guides.map(
+//     async (id) => await User.findById(id)
+//   );
+//   //Directly assign the array to guides property.
+//   this.guides = await Promise.all(arrayOfPromises);
+//   next();
+// });
 
 // tourSchema.pre('save', (next) => {
 //   console.log('Saving the requested document to DB........');
