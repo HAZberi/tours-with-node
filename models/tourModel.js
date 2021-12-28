@@ -176,6 +176,13 @@ tourSchema.pre(/^find/, function (next) {
   next();
 });
 
+//populating references when querying mongodb
+tourSchema.pre(/^find/, function (next) {
+  this.populate({ path: 'guides', select: '-__v -changedPasswordAt' });
+
+  next();
+});
+
 //Triggers after a query is executed and returned respective results.
 //**Remember arrow function in callbacks change the reference to this keyword**
 tourSchema.post(/^find/, function (docs, next) {
