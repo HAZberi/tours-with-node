@@ -81,6 +81,45 @@ const tourSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    startLocation: {
+      //GeoJSON Format
+      type: {
+        type: String,
+        default: 'Point',
+        enum: ['Point'],
+      },
+      coordinates: {
+        type: [Number], //longitude[0], latitude[1]
+      },
+      address: {
+        type: String,
+      },
+      description: {
+        type: String,
+      },
+    },
+    locations: [
+      //An Array of locations in GeoJSON format
+      {
+        type: {
+          type: String,
+          default: 'Point',
+          enum: ['Point'],
+        },
+        coordinates: {
+          type: [Number],
+        },
+        address: {
+          type: String,
+        },
+        description: {
+          type: String,
+        },
+        day: {
+          type: Number,
+        },
+      },
+    ],
   },
   {
     toJSON: { virtuals: true },
