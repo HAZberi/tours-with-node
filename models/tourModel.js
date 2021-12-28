@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
+const User = require('./userModel');
 //Mongoose Schema
 
 const tourSchema = new mongoose.Schema(
@@ -120,6 +121,9 @@ const tourSchema = new mongoose.Schema(
         },
       },
     ],
+    guides: {
+      type: Array,
+    },
   },
   {
     toJSON: { virtuals: true },
@@ -136,6 +140,16 @@ tourSchema.virtual('durationInWeeks').get(function () {
 //Triggers before save() and create() but NOT after insertMany();
 tourSchema.pre('save', function (next) {
   this.slug = slugify(this.name, { lower: true });
+  next();
+});
+
+//Embedding User documentes in Tour Model Schema -- Check lecture 150 NodeJS for details
+tourSchema.pre('save', async function (next) {
+  const arrayOfPromises = this.guides.map(
+    async (id) => await User.findById(id)
+  );
+  //Directly assign the array to guides property.
+  this.guides = await Promise.all(arrayOfPromises);
   next();
 });
 
