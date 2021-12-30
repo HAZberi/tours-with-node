@@ -12,6 +12,7 @@ const hpp = require('hpp');
 const AppError = require('./utils/appError');
 const tourRouter = require('./routes/tourRouter');
 const userRouter = require('./routes/userRouter');
+const reviewRouter = require('./routes/reviewRouter');
 const globalErrorHandler = require('./controllers/errorController');
 
 const app = express();
@@ -85,6 +86,7 @@ app.use((req, _, next) => {
 //defined in the code. "Order Matters"
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
+app.use('/api/v1/reviews', reviewRouter);
 
 //if user hits an undefined route
 app.all('*', (req, res, next) => {
