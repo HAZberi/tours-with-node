@@ -133,6 +133,13 @@ tourSchema.virtual('durationInWeeks').get(function () {
   return this.duration / 7;
 });
 
+//Virtual Populate
+tourSchema.virtual('reviews', {
+  ref: 'Review',
+  foreignField: 'tour',
+  localField: '_id',
+});
+
 //Document Middleware for mongoDB
 
 //Triggers before save() and create() but NOT after insertMany();

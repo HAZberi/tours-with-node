@@ -35,7 +35,12 @@ const reviewSchema = new mongoose.Schema(
 //Query Middleware
 
 reviewSchema.pre(/^find/, function (next) {
-  this.populate({ path: 'tour', select: 'name' }).populate({
+  //Populate both user and tour when querying reviews -- inefficient
+  // this.populate({ path: 'tour', select: 'name' }).populate({
+  //   path: 'user',
+  //   select: 'name',
+  // });
+  this.populate({
     path: 'user',
     select: 'name',
   });
