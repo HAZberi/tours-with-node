@@ -14,7 +14,10 @@ const {
 
 const { protect, restrictTo } = require('../controllers/authController');
 
-const { createReview } = require('../controllers/reviewController');
+//For Simple Nested Routing
+// const { createReview } = require('../controllers/reviewController');
+
+const reviewRouter = require('./reviewRouter');
 
 //router.param('id', checkId);
 
@@ -32,6 +35,10 @@ router
   .patch(updateATour)
   .delete(protect, restrictTo('admin', 'lead-guide'), deleteATour);
 
-router.route('/:tourId/review').post(protect, restrictTo('user'), createReview);
+// Simple nested routing implememtation
+// router.route('/:tourId/review').post(protect, restrictTo('user'), createReview);
+
+// Nested Routing Advanced Implementation
+router.use('/:tourId/review', reviewRouter);
 
 module.exports = router;

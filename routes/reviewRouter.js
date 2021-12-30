@@ -1,6 +1,9 @@
 const express = require('express');
 
-const router = express.Router();
+const router = express.Router({
+  //To Allow Nested Routes with Separation of Concerns
+  mergeParams: true,
+});
 
 const {
   getAllReviews,
