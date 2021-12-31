@@ -1,8 +1,8 @@
 const Tour = require('../models/tourModel');
 const APIFeatures = require('../utils/apiFeatures');
-const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const factory = require('./handlerFactory');
+// const AppError = require('../utils/appError');
 
 exports.topFiveTours = async (req, _, next) => {
   req.query.sort = '-ratingsAverage,price';
@@ -28,27 +28,7 @@ exports.getAllTours = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getATour = catchAsync(async (req, res, next) => {
-  const { id } = req.params;
-  const tour = await Tour.findById(id).populate('reviews');
-
-  //populating references/reference ids
-  // const tour = await Tour.findById(id).populate({
-  //   path: 'guides',
-  //   select: '-__v -changedPasswordAt',
-  // });
-
-  //To handle undefined mongoDB ID
-  //Example: 619281f6d87eab1c837dba77 will return null but 619281f6d87eab1c837dbb77 will return a tour
-  if (!tour) return next(new AppError(`No tour found with ID:${id}`, 404));
-
-  res.status(200).json({
-    status: 'success',
-    data: {
-      tour,
-    },
-  });
-});
+exports.getATour = factory.getADoc(Tour, { path: 'reviews' });
 
 exports.createATour = factory.createADoc(Tour);
 

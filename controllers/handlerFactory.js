@@ -43,3 +43,32 @@ exports.createADoc = (Model) =>
       },
     });
   });
+
+exports.getADoc = (Model, populateOptions) =>
+  catchAsync(async (req, res, next) => {
+    const { id } = req.params;
+    let query = Model.findById(id);
+
+    if (populateOptions) {
+      query = query.populate(populateOptions);
+    }
+
+    const doc = await query;
+
+    //populating references/reference ids
+    // const doc = await Tour.findById(id).populate({
+    //   path: 'guides',
+    //   select: '-__v -changedPasswordAt',
+    // });
+
+    //To handle undefined mongoDB ID
+    //Example: 619281f6d87eab1c837dba77 will return null but 619281f6d87eab1c837dbb77 will return a doc
+    if (!doc) return next(new AppError(`No doc found with ID:${id}`, 404));
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        doc,
+      },
+    });
+  });
