@@ -48,6 +48,12 @@ exports.createAUser = (_, res) => {
   });
 };
 
+exports.getMe = (req, res, next) => {
+  req.params.id = req.user.id;
+
+  next();
+};
+
 exports.getAllUsers = factory.getAllDocs(User);
 
 exports.getAUser = factory.getADoc(User);
