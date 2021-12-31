@@ -58,12 +58,7 @@ exports.createAUser = (_, res) => {
   });
 };
 
-exports.getAUser = (_, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'Request to this route is not defined',
-  });
-};
+exports.getAUser = factory.getADoc(User);
 
 exports.updateAUser = factory.updateADoc(User);
 
