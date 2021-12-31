@@ -32,4 +32,6 @@ exports.createReview = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.updateAReview = factory.updateADoc(Review);
+
 exports.deleteAReview = factory.deleteADoc(Review);
