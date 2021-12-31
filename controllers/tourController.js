@@ -28,16 +28,6 @@ exports.getAllTours = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.createATour = catchAsync(async (req, res, next) => {
-  const newTour = await Tour.create(req.body);
-  res.status(201).json({
-    status: 'success',
-    data: {
-      tour: newTour,
-    },
-  });
-});
-
 exports.getATour = catchAsync(async (req, res, next) => {
   const { id } = req.params;
   const tour = await Tour.findById(id).populate('reviews');
@@ -59,6 +49,8 @@ exports.getATour = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+exports.createATour = factory.createADoc(Tour);
 
 exports.updateATour = factory.updateADoc(Tour);
 
