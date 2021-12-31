@@ -32,7 +32,7 @@ router.route('/').get(protect, getAllTours).post(createATour);
 router
   .route('/:id')
   .get(getATour)
-  .patch(updateATour)
+  .patch(protect, restrictTo('admin', 'lead-guide'), updateATour)
   .delete(protect, restrictTo('admin', 'lead-guide'), deleteATour);
 
 // Simple nested routing implememtation
