@@ -76,7 +76,12 @@ exports.getADoc = (Model, populateOptions) =>
 
 exports.getAllDocs = (Model) =>
   catchAsync(async (req, res, next) => {
-    const features = new APIFeatures(Model.find(), req.query)
+    //Allow Nested Route GET Reviews on a Tour
+    //Beware populating filter object like this is really a hack. A better approch is to create a separate middleware
+    let filter = {};
+    if (req.params.tourId) filter = { tour: req.params.tourId };
+
+    const features = new APIFeatures(Model.find(filter), req.query)
       .filter()
       .sort()
       .limitFields()
