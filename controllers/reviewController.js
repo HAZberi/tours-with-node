@@ -26,6 +26,8 @@ exports.createTourAndUserIds = (req, res, next) => {
   next();
 };
 
+exports.getAReview = factory.getADoc(Review);
+
 exports.createReview = factory.createADoc(Review);
 
 exports.updateAReview = factory.updateADoc(Review);

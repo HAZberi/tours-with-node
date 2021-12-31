@@ -11,6 +11,7 @@ const {
   deleteAReview,
   updateAReview,
   createTourAndUserIds,
+  getAReview,
 } = require('../controllers/reviewController');
 
 const { protect, restrictTo } = require('../controllers/authController');
@@ -20,6 +21,6 @@ router
   .get(getAllReviews)
   .post(protect, restrictTo('user'), createTourAndUserIds, createReview);
 
-router.route('/:id').patch(updateAReview).delete(deleteAReview);
+router.route('/:id').get(getAReview).patch(updateAReview).delete(deleteAReview);
 
 module.exports = router;
