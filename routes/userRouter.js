@@ -45,7 +45,7 @@ router.route('/').get(getAllUsers).post(createAUser);
 router
   .route('/:id')
   .get(getAUser)
-  .patch(updateAUser)
+  .patch(protect, restrictTo('admin'), updateAUser)
   .delete(protect, restrictTo('admin'), deleteAUser);
 
 module.exports = router;
