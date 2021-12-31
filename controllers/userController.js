@@ -2,6 +2,7 @@ const User = require('../models/userModel');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const filterObject = require('../utils/filterReqBody');
+const factory = require('./handlerFactory');
 
 exports.getAllUsers = catchAsync(async (req, res, next) => {
   const users = await User.find();
@@ -70,9 +71,4 @@ exports.updateAUser = (_, res) => {
   });
 };
 
-exports.deleteAUser = (_, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'Request to this route is not defined',
-  });
-};
+exports.deleteAUser = factory.deleteADoc(User);

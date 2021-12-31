@@ -15,6 +15,7 @@ const {
   signUp,
   logIn,
   protect,
+  restrictTo,
   forgotPassword,
   resetPassword,
   updatePassword,
@@ -41,6 +42,10 @@ router.route('/delete-me').delete(protect, deleteMe);
 
 router.route('/').get(getAllUsers).post(createAUser);
 
-router.route('/:id').get(getAUser).patch(updateAUser).delete(deleteAUser);
+router
+  .route('/:id')
+  .get(getAUser)
+  .patch(updateAUser)
+  .delete(protect, restrictTo('admin'), deleteAUser);
 
 module.exports = router;
