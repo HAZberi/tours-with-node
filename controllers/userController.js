@@ -4,16 +4,6 @@ const catchAsync = require('../utils/catchAsync');
 const filterObject = require('../utils/filterReqBody');
 const factory = require('./handlerFactory');
 
-exports.getAllUsers = catchAsync(async (req, res, next) => {
-  const users = await User.find();
-
-  res.status(200).json({
-    status: 'success',
-    results: users.length,
-    data: users,
-  });
-});
-
 exports.updateMe = catchAsync(async (req, res, next) => {
   //1) Create error if the user POST password data
   if (req.body.password || req.body.confirmPassword)
@@ -57,6 +47,8 @@ exports.createAUser = (_, res) => {
       'Request to this route is not defined. User /signup for this route.',
   });
 };
+
+exports.getAllUsers = factory.getAllDocs(User);
 
 exports.getAUser = factory.getADoc(User);
 
