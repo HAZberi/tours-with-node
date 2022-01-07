@@ -34,21 +34,23 @@ router.route('/forgot-password').post(forgotPassword);
 //A separate route for resetting password - does not follow REST protocol.
 router.route('/reset-password/:token').patch(resetPassword);
 
+//A middleware to provide authentication for all routes below line 39. Order of middleware is important
+router.use(protect);
+
 //A separate route for resetting password - does not follow REST protocol.
-router.route('/update-password').patch(protect, updatePassword);
+router.route('/update-password').patch(updatePassword);
 
-router.route('/update-me').patch(protect, updateMe);
+router.route('/update-me').patch(updateMe);
 
-router.route('/delete-me').delete(protect, deleteMe);
+router.route('/delete-me').delete(deleteMe);
 
-router.route('/get-me').get(protect, getMe, getAUser);
+router.route('/get-me').get(getMe, getAUser);
+
+//A middleware to provide authentication for all routes below line 39. Order of middleware is important
+router.use(restrictTo('admin'));
 
 router.route('/').get(getAllUsers).post(createAUser);
 
-router
-  .route('/:id')
-  .get(getAUser)
-  .patch(protect, restrictTo('admin'), updateAUser)
-  .delete(protect, restrictTo('admin'), deleteAUser);
+router.route('/:id').get(getAUser).patch(updateAUser).delete(deleteAUser);
 
 module.exports = router;
