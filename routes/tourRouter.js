@@ -25,9 +25,14 @@ router.route('/top-5-tours').get(topFiveTours, getAllTours);
 
 //Aggregation Pipeline
 router.route('/tour-stats').get(getTourStats);
-router.route('/monthly-plan/:year').get(monthlyPlan);
+router
+  .route('/monthly-plan/:year')
+  .get(protect, restrictTo('admin', 'lead-guide', 'guide'), monthlyPlan);
 
-router.route('/').get(protect, getAllTours).post(createATour);
+router
+  .route('/')
+  .get(getAllTours)
+  .post(protect, restrictTo('admin', 'lead-guide'), createATour);
 
 router
   .route('/:id')
