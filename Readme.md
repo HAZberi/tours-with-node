@@ -25,3 +25,4 @@ Implementation of API features:
 * Included a script to import data from JSON file and delete records from db.
 
 - Authentication and Authorization workflows built in to API
+- Database middlewares to encrypt, filter, sort, aggregate, limit and manage data. 
