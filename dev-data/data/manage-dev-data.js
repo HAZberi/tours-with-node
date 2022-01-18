@@ -34,7 +34,7 @@ const deleteData = async () => {
     await Tour.deleteMany();
     await User.deleteMany();
     await Review.deleteMany();
-    console.log('All documents in tour collection successfully deleted.');
+    console.log('All documents are successfully deleted.');
   } catch (err) {
     console.error(err);
   }
