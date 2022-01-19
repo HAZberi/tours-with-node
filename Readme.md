@@ -26,3 +26,4 @@ Implementation of API features:
 
 - Authentication and Authorization workflows built in to API
 - Database middlewares to encrypt, filter, sort, aggregate, limit and manage data. 
+- Implemented Factory Controller to perform basic CRUD oprations on the API. Utilized helper modules to maintain open-closed clean code principle.
