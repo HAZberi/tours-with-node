@@ -140,6 +140,13 @@ tourSchema.virtual('reviews', {
   localField: '_id',
 });
 
+//Indexing fields for faster retrieval
+tourSchema.index({ price: 1 });
+//Compound Indexing
+tourSchema.index({ price: 1, ratingsAverage: -1 });
+//indexing slugs for quick retrieval of pages
+tourSchema.index({ slug: 1 });
+
 //Document Middleware for mongoDB
 
 //Triggers before save() and create() but NOT after insertMany();

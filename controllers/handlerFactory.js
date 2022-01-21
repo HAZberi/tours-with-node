@@ -86,6 +86,10 @@ exports.getAllDocs = (Model) =>
       .sort()
       .limitFields()
       .paginate();
+
+    // To check query stats and debug indexing of records/keys
+    // const docs = await features.query.explain();
+
     const docs = await features.query;
 
     res.status(200).json({
