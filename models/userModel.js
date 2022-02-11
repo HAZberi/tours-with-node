@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const crypto = require('crypto');
 const validator = require('validator');
+//Bcrypt is way faster than bcryptjs, although users prefer bcryptjs at npm.
 const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
