@@ -67,13 +67,15 @@ reviewSchema.statics.calcAverageRatings = async function (tourId) {
     },
   ]);
 
-  //console.log(stats);
+  console.log(stats);
 
   //Update the Tour properties to incoporate new aggregations
-  await Tour.findByIdAndUpdate(tourId, {
-    ratingsQuantity: stats[0].nRating,
-    ratingsAverage: stats[0].avgRating,
-  });
+  if (stats[0]) {
+    await Tour.findByIdAndUpdate(tourId, {
+      ratingsQuantity: stats[0].nRating,
+      ratingsAverage: stats[0].avgRating,
+    });
+  }
 };
 
 //Triggers once the doucment is saved to the database.
@@ -93,25 +95,11 @@ reviewSchema.post('save', (doc, next) => {
 //Triggers whenever a document/review is edited and deleted
 //Ex: findByIdAndUpdate findByIdAndDelete
 //We donot have document middleware for findByIdAndUpdate/Delete.
-//So we have to use Query middleware "findOneAnd" to calculate stats.
-reviewSchema.pre(/^findOneAnd/, async function (next) {
-  const r = await this.findOne();
-  //this.getReviewBeforeUpdateOrDelete = r;
-  console.log(r);
-
-  console.log(this);
-
+//So use Query middleware with regex "findOneAnd" to calculate stats.
+//REFER to LECTURE 169 Questions to get a detailed overview.
+reviewSchema.post(/^findOneAnd/, (doc, next) => {
+  doc.constructor.calcAverageRatings(doc.tour);
   next();
-});
-
-reviewSchema.post(/^findOneAnd/, async function () {
-  console.log(this);
-  await this.getReviewBeforeUpdateOrDelete.constructor.calcAverageRatings(
-    this.getReviewBeforeUpdateOrDelete.tour
-  );
-  // await doc.constructor.calcAverageRatings(
-  //   doc.getTourBeforeUpdateOrDelete.tour
-  // );
 });
 
 const Review = mongoose.model('Review', reviewSchema);
