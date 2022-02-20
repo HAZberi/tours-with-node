@@ -90,6 +90,30 @@ reviewSchema.post('save', (doc, next) => {
   next();
 });
 
+//Triggers whenever a document/review is edited and deleted
+//Ex: findByIdAndUpdate findByIdAndDelete
+//We donot have document middleware for findByIdAndUpdate/Delete.
+//So we have to use Query middleware "findOneAnd" to calculate stats.
+reviewSchema.pre(/^findOneAnd/, async function (next) {
+  const r = await this.findOne();
+  //this.getReviewBeforeUpdateOrDelete = r;
+  console.log(r);
+
+  console.log(this);
+
+  next();
+});
+
+reviewSchema.post(/^findOneAnd/, async function () {
+  console.log(this);
+  await this.getReviewBeforeUpdateOrDelete.constructor.calcAverageRatings(
+    this.getReviewBeforeUpdateOrDelete.tour
+  );
+  // await doc.constructor.calcAverageRatings(
+  //   doc.getTourBeforeUpdateOrDelete.tour
+  // );
+});
+
 const Review = mongoose.model('Review', reviewSchema);
 
 module.exports = Review;
