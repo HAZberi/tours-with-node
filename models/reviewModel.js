@@ -34,6 +34,10 @@ const reviewSchema = new mongoose.Schema(
   } //a virtual "id" field will be created as well automatically.
 );
 
+//Indexing
+//Users should not be allowed to create multiple reviews on a single tour.
+reviewSchema.index({ user: 1, tour: 1 }, { unique: true });
+
 //Query Middleware
 
 reviewSchema.pre(/^find/, function (next) {
@@ -67,7 +71,7 @@ reviewSchema.statics.calcAverageRatings = async function (tourId) {
     },
   ]);
 
-  console.log(stats);
+  //console.log(stats);
 
   //Update the Tour properties to incoporate new aggregations
   if (stats[0]) {
