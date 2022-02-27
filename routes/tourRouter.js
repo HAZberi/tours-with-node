@@ -10,6 +10,7 @@ const {
   deleteATour,
   createATour,
   monthlyPlan,
+  toursWithin,
 } = require('../controllers/tourController');
 
 const { protect, restrictTo } = require('../controllers/authController');
@@ -39,6 +40,11 @@ router
   .get(getATour)
   .patch(protect, restrictTo('admin', 'lead-guide'), updateATour)
   .delete(protect, restrictTo('admin', 'lead-guide'), deleteATour);
+
+//For GeoSpatial Queries
+router
+  .route('/tours-within/:distance/center/:latlng/unit/:unit')
+  .get(toursWithin);
 
 // Simple nested routing implememtation
 // router.route('/:tourId/review').post(protect, restrictTo('user'), createReview);

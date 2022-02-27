@@ -2,7 +2,7 @@ const Tour = require('../models/tourModel');
 const catchAsync = require('../utils/catchAsync');
 const factory = require('./handlerFactory');
 // const APIFeatures = require('../utils/apiFeatures');
-// const AppError = require('../utils/appError');
+const AppError = require('../utils/appError');
 
 exports.topFiveTours = async (req, _, next) => {
   req.query.sort = '-ratingsAverage,price';
@@ -105,5 +105,28 @@ exports.monthlyPlan = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success',
     data: plan,
+  });
+});
+
+//GeoSpatical Tour Controller
+exports.toursWithin = catchAsync(async (req, res, next) => {
+  const { distance, latlng, unit } = req.params;
+  console.log(req.params);
+
+  const [lat, lng] = latlng.split(',');
+
+  if (!lat || !lng) {
+    next(
+      new AppError(
+        'Please provide the lat-long center in a format like 45,-67',
+        400
+      )
+    );
+  }
+
+  console.log(lat, lng, distance, unit);
+
+  res.status(200).json({
+    status: 'success',
   });
 });
