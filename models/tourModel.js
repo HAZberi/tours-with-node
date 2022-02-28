@@ -147,6 +147,8 @@ tourSchema.index({ price: 1 });
 tourSchema.index({ price: 1, ratingsAverage: -1 });
 //indexing slugs for quick retrieval of pages
 tourSchema.index({ slug: 1 });
+//Indexing for GeoSpatial Queries is important. Ex Tours Within a Radius
+tourSchema.index({ startLocation: '2dsphere' });
 
 //Document Middleware for mongoDB
 
